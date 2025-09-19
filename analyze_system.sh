@@ -8,10 +8,15 @@ METRICS_FILE="/var/log/health_monitor/metrics_${TIMESTAMP}.json"
 ANALYSIS_FILE="/var/log/health_monitor/analysis_${TIMESTAMP}.txt"
 
 # Load metrics from JSON file
-cpu_usage=$(jq '.cpu.usage_percent' "$METRICS_FILE")
-mem_usage=$(jq '.memory.usage_percent' "$METRICS_FILE")
-disk_usage=$(jq '.disk.usage_percent' "$METRICS_FILE" | tr -d '%')
-zombie_procs=$(jq '.processes.zombies' "$METRICS_FILE")
+#cpu_usage=$(jq '.cpu.usage_percent' "$METRICS_FILE")
+#mem_usage=$(jq '.memory.usage_percent' "$METRICS_FILE")
+#disk_usage=$(jq '.disk.usage_percent' "$METRICS_FILE" | tr -d '%')
+#zombie_procs=$(jq '.processes.zombies' "$METRICS_FILE")
+cpu_usage=$(jq -r '.cpu.usage_percent // 0' "$METRICS_FILE")
+mem_usage=$(jq -r '.memory.usage_percent // 0' "$METRICS_FILE")
+disk_usage=$(jq -r '.disk.usage_percent // 0' "$METRICS_FILE" | tr -d '%')
+zombie_procs=$(jq -r '.processes.zombies // 0' "$METRICS_FILE")
+
 
 # Thresholds (adjust based on your environment)
 CPU_THRESHOLD=80
